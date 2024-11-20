@@ -1,4 +1,4 @@
-package refirgerator;
+package refrigerator;
 
 import java.util.*;
 

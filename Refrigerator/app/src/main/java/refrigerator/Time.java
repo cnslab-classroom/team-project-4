@@ -1,9 +1,10 @@
-package refirgerator;
+package refrigerator;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.TimeUnit;
+
 
 public class Time {
     private static final Lock lock = new ReentrantLock();

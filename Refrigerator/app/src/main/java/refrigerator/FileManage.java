@@ -1,4 +1,4 @@
-package refirgerator;
+package refrigerator;
 
 import java.io.*;
 import java.nio.file.*;
@@ -19,7 +19,6 @@ public class FileManage {
             e.printStackTrace();
         }
     }
-
     public static String recommendRecipe(String key) {
         Path p = Paths.get(RECIPE_PATH + key);
         if (!Files.exists(p)) return "No Recipe";
