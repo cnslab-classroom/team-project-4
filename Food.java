@@ -3,36 +3,31 @@ package refirgerator;
 import java.util.Objects;
 
 public class Food implements Comparable<Food> {
-    private String name;
+    private final String name;
     private int expiry;
-    private int amount;
+    private final int reminderExpiry;
 
     public Food(String name, int expiry) {
         this.name = name;
         this.expiry = expiry;
+        this.reminderExpiry = Math.min(expiry / 2, 5);
     }
 
-    public synchronized void setExpiry(int newExpiry) {
-        this.expiry = newExpiry;
-    }
-
-    public synchronized String getName() {
+    public String getName() {
         return name;
     }
 
-    public synchronized int getExpiry() {
+    public int getExpiry() {
         return expiry;
     }
 
-    public synchronized int getAmount()
-    {
-        return amount;
+    public void setExpiry(int expiry) {
+        this.expiry = expiry;
     }
 
-    public synchronized void setAmount(int n)
-    {
-        this.amount += n;
-    }   
+    public int getReminderExpiry() {
+        return reminderExpiry;
+    }
 
     @Override
     public int compareTo(Food other) {
@@ -56,5 +51,4 @@ public class Food implements Comparable<Food> {
     public String toString() {
         return "Name: " + name + " Expiry: " + expiry;
     }
-
 }

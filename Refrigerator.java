@@ -1,101 +1,108 @@
 package refirgerator;
+
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Refrigerator {
-    private TreeSet<Food> expirySet;
-    private int length;
+    private final NavigableSet<Food> expirySet = new TreeSet<>();
+    private final Queue<Food> alertSet = new LinkedList<>();
+    private final Queue<Food> reminderSet = new LinkedList<>();
+    private final Lock lock = new ReentrantLock();
 
-    public Refrigerator() {
-        expirySet = new TreeSet<>();
-        length = 0;
+    public void push(Food f) {
+        lock.lock();
+        try {
+            expirySet.add(f);
+        } finally {
+            lock.unlock();
+        }
     }
 
-    public synchronized void push(Food f) {
-        for(Food f_in_r : expirySet)
-        {
-            if (f_in_r.equals(f))
-            {
-                f_in_r.setAmount(f_in_r.getAmount() + 1);
-                return;
+    public Food pop(String name) {
+        lock.lock();
+        try {
+            for (Food f : expirySet) {
+                if (f.getName().equals(name)) {
+                    expirySet.remove(f);
+                    return f;
+                }
             }
+            return null;
+        } finally {
+            lock.unlock();
         }
-        expirySet.add(f);
-        length++;
     }
 
-    public synchronized Food pop(int index) {
-        Iterator<Food> it = expirySet.iterator();
-        Food target = null;
-        for (int i = 0; i <= index; i++) {
-            target = it.next();
-        }
-        if (target != null) {
-            expirySet.remove(target);
-            length--;
-        }
-        return target;
-    }
-
-    public synchronized Food pop(String food_name, int n) {
-        Food target = null;
-        for (Food f : expirySet) {
-            if (f.getName().equals(food_name)) {
-                target = f;
-                break;
+    public Food pop(int index) {
+        lock.lock();
+        try {
+            Iterator<Food> it = expirySet.iterator();
+            for (int i = 0; i < index; i++) {
+                it.next();
             }
-        }
-        if (target == null) return null;
-        
-        if (target.getAmount() <= n)
-        {
-            expirySet.remove(target);
-            length--;
-        }
-        else
-        {
-            target.setAmount(target.getAmount() - n);
-        }
-
-        return target;
-    }
-
-    public synchronized void minusExpiry() {
-        for (Food f : expirySet) {
-            f.setExpiry(f.getExpiry() - 1);
+            Food result = it.next();
+            expirySet.remove(result);
+            return result;
+        } finally {
+            lock.unlock();
         }
     }
 
-    public synchronized void overExpiry(List<Integer> v) {
-        v.clear();
-        int index = 0;
-        for (Food f : expirySet) {
-            if (f.getExpiry() <= 0) {
-                v.add(index);
+    public void minusExpiry() {
+        lock.lock();
+        try {
+            Iterator<Food> it = expirySet.iterator();
+            while (it.hasNext()) {
+                Food f = it.next();
+                int expiry = f.getExpiry() - 1;
+                f.setExpiry(expiry);
+
+                if (expiry == f.getReminderExpiry()) {
+                    reminderSet.add(f);
+                } else if (expiry <= 0) {
+                    alertSet.add(f);
+                    it.remove();
+                }
             }
-            index++;
+        } finally {
+            lock.unlock();
         }
     }
 
-    public synchronized Food get(int index) {
-        Iterator<Food> it = expirySet.iterator();
-        for (int i = 0; i < index; i++) {
-            it.next();
-
+    public boolean isAlertEmpty() {
+        lock.lock();
+        try {
+            return alertSet.isEmpty();
+        } finally {
+            lock.unlock();
         }
-        return it.next();
     }
 
-    public synchronized int getLength() {
-        return length;
+    public boolean isReminderEmpty() {
+        lock.lock();
+        try {
+            return reminderSet.isEmpty();
+        } finally {
+            lock.unlock();
+        }
     }
 
-    public synchronized void print() {
-        System.out.println("\nRefrigerator status");
-        System.out.println("Has " + length + " foods");
-        System.out.println("Food list");
-        for (Food f : expirySet) {
-            System.out.println(f);
+    public Food popAlertSet() {
+        lock.lock();
+        try {
+            return alertSet.poll();
+        } finally {
+            lock.unlock();
         }
-        System.out.println();
+    }
+
+    public Food popReminderSet() {
+        lock.lock();
+        try {
+            return reminderSet.poll();
+        } finally {
+            lock.unlock();
+        }
     }
 }

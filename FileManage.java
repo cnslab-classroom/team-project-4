@@ -74,8 +74,11 @@ public class FileManage {
                 writer.println(line);
             }
         } catch (IOException e) {
+            scanner.close();
             throw new RuntimeException("recipe file open error", e);
         }
+
+        scanner.close();
     }
 
     public static Food getFood(String key) {
@@ -99,6 +102,7 @@ public class FileManage {
         int expiry = Integer.parseInt(scanner.nextLine());
         Food f = new Food(key, expiry);
         setFood(f);
+        scanner.close();
     }
 
     public static void setFood(Food f) {
