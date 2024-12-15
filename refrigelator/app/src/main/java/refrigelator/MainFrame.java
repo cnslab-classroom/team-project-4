@@ -21,6 +21,8 @@ public class MainFrame extends JFrame {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(4, 2));
+        JPanel buttonPanel2 = new JPanel();
+        buttonPanel2.setLayout(new GridLayout(1,1));
 
         JButton viewAllButton = new JButton("전체 음식 보기");
         JButton addFoodButton = new JButton("음식 추가");
@@ -30,7 +32,9 @@ public class MainFrame extends JFrame {
         JButton saveFoodButton = new JButton("음식 저장");
         JButton saveRecipeButton = new JButton("레시피 저장");
         JButton exitButton = new JButton("종료");
+        JButton recommendButton = new JButton("레시피 추천");
 
+        buttonPanel2.add(recommendButton);
         buttonPanel.add(viewAllButton);
         buttonPanel.add(addFoodButton);
         buttonPanel.add(removeFoodButton);
@@ -42,6 +46,7 @@ public class MainFrame extends JFrame {
 
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
+        add(buttonPanel2, BorderLayout.NORTH);
 
         viewAllButton.addActionListener(e -> UI.printAllFood(refrigerator, outputArea));
         addFoodButton.addActionListener(e -> UI.pushFood(refrigerator, outputArea));
@@ -54,6 +59,7 @@ public class MainFrame extends JFrame {
             UI.programOff();
             System.exit(0);
         });
+        recommendButton.addActionListener(e->UI.recommendation(outputArea));
 
         startBackgroundThreads();
     }

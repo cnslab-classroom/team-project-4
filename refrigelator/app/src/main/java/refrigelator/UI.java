@@ -57,7 +57,7 @@ public class UI {
     }
 
     public static void saveRecipe(JTextArea outputArea) {
-        String foodName = JOptionPane.showInputDialog("저장할 ��시피의 음식 이름을 입력하세요:");
+        String foodName = JOptionPane.showInputDialog("저장할 레시피의 음식 이름을 입력하세요:");
         if (foodName != null && !foodName.trim().isEmpty()) {
             String recipeName = JOptionPane.showInputDialog("저장할 레시피의 이름을 입력하세요:");
             if (recipeName != null && !recipeName.trim().isEmpty()) {
@@ -65,6 +65,13 @@ public class UI {
                 outputArea.append("레시피가 저장되었습니다: " + recipeName + "\n");
                 JOptionPane.showMessageDialog(null, recipeName + " 레시피 저장 완료", "저장 완료", JOptionPane.INFORMATION_MESSAGE);
             }
+        }
+    }
+
+    public static void recommendation(JTextArea outputArea ){
+        String foodName = JOptionPane.showInputDialog("레시피를 볼 음식의 이름을 입력하세요:");
+        if (foodName != null && !foodName.trim().isEmpty()) {
+             outputArea.append(FileManage.recommendRecipe(foodName.trim()) + "\n");
         }
     }
 
