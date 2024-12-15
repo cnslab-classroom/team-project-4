@@ -93,7 +93,7 @@ public class Time {
 
     private static void printExpiryReminder(Refrigerator r) {
         Food nearingExpiryFood = r.popReminSet();
-        JOptionPane.showMessageDialog(null, "Expiry reminder\nFood nearing expiry: " + nearingExpiryFood + "\nPlease use it soon.", "Expiry Reminder", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Expiry reminder\nFood nearing expiry: " + nearingExpiryFood + "\nPlease use it soon.\nRecommend Recipe:"+ FileManage.recommendRecipe(nearingExpiryFood.getName().trim()), "Expiry Reminder", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void programOff() {
