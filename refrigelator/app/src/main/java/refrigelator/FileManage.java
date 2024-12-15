@@ -95,7 +95,8 @@ public class FileManage {
             }
             if (recipes.isEmpty()) return "No Recipe";
             Path randomRecipe = recipes.get(new Random().nextInt(recipes.size()));
-            return getRecipe(key, randomRecipe.getFileName().toString().replace(RECIPE_EXTENSION, ""));
+            String recipeName = randomRecipe.getFileName().toString().replace(RECIPE_EXTENSION, "");
+            return recipeName+getRecipe(key, recipeName);
         } catch (IOException e) {
             throw new RuntimeException("Recipe file open error", e);
         }
